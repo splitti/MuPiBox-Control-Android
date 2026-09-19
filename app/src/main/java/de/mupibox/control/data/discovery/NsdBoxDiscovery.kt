@@ -30,7 +30,7 @@ class NsdBoxDiscovery(context: Context) {
         val listener = object : NsdManager.DiscoveryListener {
             override fun onDiscoveryStarted(serviceType: String) = Unit
             override fun onDiscoveryStopped(serviceType: String) = Unit
-            override fun onStartDiscoveryFailed(serviceType: String, errorCode: Int) = close()
+            override fun onStartDiscoveryFailed(serviceType: String, errorCode: Int) { close() }
             override fun onStopDiscoveryFailed(serviceType: String, errorCode: Int) = Unit
 
             override fun onServiceFound(serviceInfo: NsdServiceInfo) {
