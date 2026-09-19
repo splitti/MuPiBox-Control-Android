@@ -7,7 +7,7 @@ The repository already contains the Android M1 scaffold. Do not restart from scr
 1. Clone `splitti/MuPiBox-Control-Android` to `/opt/mupibox-control`.
 2. Read `CLAUDE.md` and `docs/PROJECT_STATUS.md`.
 3. Run `sudo ./scripts/bootstrap-lxc.sh` once if Android SDK/JDK 17 are not ready.
-4. Run `./scripts/init-gradle-wrapper.sh` and commit the generated wrapper files if successful.
+4. Verify the committed wrapper with `./gradlew --version`.
 5. Run `./scripts/check.sh`.
 6. Fix compile/lint/test failures surgically; do not redesign unrelated code.
 7. Start `python3 tools/mock_mupibox_server.py --port 8090` for repeatable client tests.

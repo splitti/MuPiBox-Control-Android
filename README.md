@@ -56,11 +56,13 @@ Bootstrap the Android toolchain with:
 ./scripts/bootstrap-lxc.sh
 ```
 
-Then create/refresh the Gradle wrapper once:
+The official Gradle wrapper is committed. Verify it after cloning:
 
 ```bash
-./scripts/init-gradle-wrapper.sh
+./gradlew --version
 ```
+
+`./scripts/init-gradle-wrapper.sh` remains available only for an intentional wrapper refresh.
 
 Build/test:
 
