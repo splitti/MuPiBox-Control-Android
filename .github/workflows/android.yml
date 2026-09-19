@@ -1,0 +1,38 @@
+name: Android CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      # Initial bootstrap can build even before the Gradle wrapper JAR is committed.
+      # Once scripts/init-gradle-wrapper.sh has been run on the LXC, CI automatically
+      # prefers ./gradlew.
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.6.0'
+
+      - name: Test, lint and build debug APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -x ./gradlew ]]; then
+            GRADLE=./gradlew
+          else
+            GRADLE=gradle
+          fi
+          "$GRADLE" --no-daemon test lint assembleDebug
