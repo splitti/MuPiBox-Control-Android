@@ -37,7 +37,7 @@ class Handler(BaseHTTPRequestHandler):
         if path=="/api/speak":
             text=str(payload.get("text","")).strip()
             if not text:return self.send_json(400,{"error":"text is required"})
-            print(f"[mock] TTS: {text}");return self.send_json(200,{"ok":True})
+            print("[mock] TTS request accepted");return self.send_json(200,{"ok":True})
         with LOCK:
             if path=="/api/command": return self.player_command(payload)
             if path=="/api/spotify/command": self.spotify_command(payload);return self.send_json(200,STATE["spotify"])
