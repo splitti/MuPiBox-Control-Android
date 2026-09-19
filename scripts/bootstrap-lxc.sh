@@ -142,7 +142,7 @@ export PATH="$JAVA_HOME/bin:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME
 yes | sdkmanager --licenses >/dev/null || true
 sdkmanager \
   "platform-tools" \
-  "platforms;android-37" \
+  "platforms;android-37.0" \
   "build-tools;36.0.0"
 
 cat > /etc/profile.d/android-sdk.sh <<PROFILE
