@@ -22,7 +22,7 @@ jobs:
       # Initial bootstrap can build even before the Gradle wrapper JAR is committed.
       # Once scripts/init-gradle-wrapper.sh has been run on the LXC, CI automatically
       # prefers ./gradlew.
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
         with:
           gradle-version: '9.6.0'
 
