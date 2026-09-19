@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="108" height="108" viewBox="0 0 108 108">
+  <!--
+    MuPiBox Control app icon source, platform-neutral.
+    - Background/foreground/note colors are lifted directly from MuPiBox-NG's
+      own dark theme (webui/static/style.css custom properties bg / text /
+      accent), not invented, so the app icon stays visually tied to the
+      product it controls.
+    - Geometry matches app/src/main/res/drawable/ic_launcher_*.xml exactly
+      (same 108x108 viewport/coordinates), so this file and the Android
+      vector drawables can be kept in sync by hand.
+    - For Android adaptive icons, background and foreground are split into
+      separate layers (see ic_launcher_background.xml / ic_launcher_foreground.xml);
+      this flattened file is for non-Android/reference use (e.g. a future
+      iOS app-icon export), where a single flat square image is expected.
+  -->
+  <rect width="108" height="108" fill="#0B0D11" />
+  <path
+    d="M34,74 L34,34 L54,58 L74,34 L74,74"
+    fill="none"
+    stroke="#F7F7FA"
+    stroke-width="11"
+    stroke-linecap="round"
+    stroke-linejoin="round" />
+  <circle cx="34" cy="74" r="9" fill="#F59ACA" />
+  <circle cx="74" cy="74" r="9" fill="#F59ACA" />
+</svg>

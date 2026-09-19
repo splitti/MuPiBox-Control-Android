@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Alpha-only silhouette for Android 13+ themed (monochrome) icons. Same
+     geometry as ic_launcher_foreground; color is irrelevant, only coverage
+     matters (the system re-tints this). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:pathData="M34,74 L34,34 L54,58 L74,34 L74,74"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="11"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000" />
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M25,74 a9,9 0 1,0 18,0 a9,9 0 1,0 -18,0 z" />
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M65,74 a9,9 0 1,0 18,0 a9,9 0 1,0 -18,0 z" />
+</vector>
