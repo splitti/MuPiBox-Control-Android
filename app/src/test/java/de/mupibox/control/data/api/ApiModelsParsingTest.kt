@@ -41,6 +41,6 @@ class ApiModelsParsingTest {
     }
 
     private fun fixture(name: String): String =
-        checkNotNull(javaClass.classLoader?.getResource(name.removePrefix("/"))) { "Missing fixture $name" }
+        checkNotNull(javaClass.classLoader?.getResource("fixtures/${name.removePrefix("/")}")) { "Missing fixture $name" }
             .readText()
 }
