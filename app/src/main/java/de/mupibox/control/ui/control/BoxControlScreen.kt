@@ -73,6 +73,27 @@ fun BoxControlScreen(
             modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
+            Card(modifier = Modifier.fillMaxWidth()) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Column {
+                        Text(state.box.name, style = MaterialTheme.typography.titleMedium)
+                        Text("${state.box.host}:${state.box.port}", style = MaterialTheme.typography.bodySmall)
+                    }
+                    Text(
+                        when (state.connected) {
+                            true -> "Online"
+                            false -> "Offline"
+                            null -> "Verbindet …"
+                        },
+                        style = MaterialTheme.typography.titleSmall,
+                    )
+                }
+            }
+
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 val battery = state.system.battery
                 AssistChip(

@@ -42,6 +42,7 @@ import de.mupibox.control.model.BoxEndpoint
 fun BoxesScreen(
     boxes: List<BoxEndpoint>,
     uiState: BoxesUiState,
+    onlineStates: Map<String, Boolean> = emptyMap(),
     onOpen: (BoxEndpoint) -> Unit,
     onAdd: (String, String, Int, () -> Unit) -> Unit,
     onClearError: () -> Unit,
@@ -90,6 +91,20 @@ fun BoxesScreen(
                             Column {
                                 Text(box.name, style = MaterialTheme.typography.titleMedium)
                                 Text("${box.host}:${box.port}", style = MaterialTheme.typography.bodyMedium)
+                                val online = onlineStates[box.id]
+                                Text(
+                                    when (online) {
+                                        true -> "Online"
+                                        false -> "Offline"
+                                        null -> "Wird geprüft …"
+                                    },
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = when (online) {
+                                        true -> MaterialTheme.colorScheme.primary
+                                        false -> MaterialTheme.colorScheme.error
+                                        null -> MaterialTheme.colorScheme.onSurfaceVariant
+                                    },
+                                )
                             }
                             Icon(Icons.Default.Speaker, contentDescription = null)
                         }

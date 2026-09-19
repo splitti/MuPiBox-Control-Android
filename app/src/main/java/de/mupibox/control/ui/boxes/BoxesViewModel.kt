@@ -23,8 +23,30 @@ class BoxesViewModel(private val repository: BoxRepository) : ViewModel() {
         initialValue = emptyList(),
     )
 
+    /** Per-box reachability, keyed by [BoxEndpoint.id]. Absent = not yet checked. */
+    private val _onlineStates = MutableStateFlow<Map<String, Boolean>>(emptyMap())
+    val onlineStates: StateFlow<Map<String, Boolean>> = _onlineStates.asStateFlow()
+
     private val _uiState = MutableStateFlow(BoxesUiState())
     val uiState: StateFlow<BoxesUiState> = _uiState.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            boxes.collect { refreshOnlineStates(it) }
+        }
+    }
+
+    /** Re-probes every saved box's `/api/health`. Cheap and safe to call whenever the list is shown. */
+    fun refreshOnlineStates() = refreshOnlineStates(boxes.value)
+
+    private fun refreshOnlineStates(list: List<BoxEndpoint>) {
+        list.forEach { box ->
+            viewModelScope.launch {
+                val reachable = runCatching { repository.probe(box) }.getOrNull()?.status == "ok"
+                _onlineStates.value = _onlineStates.value + (box.id to reachable)
+            }
+        }
+    }
 
     fun add(name: String, host: String, port: Int, onAdded: () -> Unit) {
         if (_uiState.value.busy) return

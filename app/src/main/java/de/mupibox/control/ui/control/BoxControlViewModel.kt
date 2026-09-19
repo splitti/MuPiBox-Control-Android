@@ -26,6 +26,8 @@ data class BoxControlUiState(
     val loading: Boolean = true,
     val actionBusy: Boolean = false,
     val error: String? = null,
+    /** null = not yet confirmed either way. */
+    val connected: Boolean? = null,
 ) {
     val spotifyActive: Boolean
         get() = PlaybackSourceSelector.active(player, spotify) == PlaybackSource.SPOTIFY
@@ -80,9 +82,19 @@ class BoxControlViewModel(
             val spotify = runCatching { repository.spotify(box) }.getOrDefault(SpotifyStatus())
             player to spotify
         }.onSuccess { (player, spotify) ->
-            _uiState.value = _uiState.value.copy(player = player, spotify = spotify, loading = false, error = null)
+            _uiState.value = _uiState.value.copy(
+                player = player,
+                spotify = spotify,
+                loading = false,
+                error = null,
+                connected = true,
+            )
         }.onFailure {
-            _uiState.value = _uiState.value.copy(loading = false, error = it.message ?: "Box nicht erreichbar")
+            _uiState.value = _uiState.value.copy(
+                loading = false,
+                error = it.message ?: "Box nicht erreichbar",
+                connected = false,
+            )
         }
     }
 

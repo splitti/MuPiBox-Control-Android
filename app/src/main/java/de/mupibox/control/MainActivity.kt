@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,9 +41,12 @@ private fun MuPiBoxControlApp(container: AppContainer) {
         }
         val boxes by boxesVm.boxes.collectAsStateWithLifecycle()
         val boxesState by boxesVm.uiState.collectAsStateWithLifecycle()
+        val onlineStates by boxesVm.onlineStates.collectAsStateWithLifecycle()
+        LaunchedEffect(Unit) { boxesVm.refreshOnlineStates() }
         BoxesScreen(
             boxes = boxes,
             uiState = boxesState,
+            onlineStates = onlineStates,
             onOpen = { selected = it },
             onAdd = boxesVm::add,
             onClearError = boxesVm::clearError,
