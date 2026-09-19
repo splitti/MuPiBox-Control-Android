@@ -3,6 +3,11 @@ name: Android CI
 on:
   push:
   pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: android-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -36,3 +41,11 @@ jobs:
             GRADLE=gradle
           fi
           "$GRADLE" --no-daemon test lint assembleDebug
+
+      - name: Upload debug APK
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mupibox-control-debug
+          path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
