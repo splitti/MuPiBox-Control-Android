@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!--
+      MuPiBox-NG currently serves its LAN API over HTTP. Dynamic private IPs cannot
+      be enumerated in domain-config entries, so cleartext is permitted here and
+      the app restricts endpoints in LocalEndpointValidator to LAN-local targets.
+      Move to HTTPS/pairing when the box API provides it.
+    -->
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>
