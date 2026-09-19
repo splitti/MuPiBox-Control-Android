@@ -32,13 +32,13 @@ class MuPiBoxClient(
     override suspend fun bluetoothStatus(box: BoxEndpoint): BluetoothResponse =
         get(box, "/api/connectivity/bluetooth")
 
-    override suspend fun playerCommand(box: BoxEndpoint, action: String, value: Number? = null) {
+    override suspend fun playerCommand(box: BoxEndpoint, action: String, value: Number?) {
         val payload = mutableMapOf<String, Any>("action" to action)
         value?.let { payload["value"] = it }
         post<Unit>(box, "/api/command", payload)
     }
 
-    override suspend fun spotifyCommand(box: BoxEndpoint, action: String, value: Number? = null): SpotifyStatus {
+    override suspend fun spotifyCommand(box: BoxEndpoint, action: String, value: Number?): SpotifyStatus {
         val payload = mutableMapOf<String, Any>("action" to action)
         value?.let { payload["value"] = it }
         return post(box, "/api/spotify/command", payload)
