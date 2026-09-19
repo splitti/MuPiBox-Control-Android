@@ -2,6 +2,7 @@ package de.mupibox.control.ui.control
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import de.mupibox.control.data.api.ApiError
 import de.mupibox.control.data.api.BluetoothDeviceDto
 import de.mupibox.control.data.api.PlayerStatus
 import de.mupibox.control.data.api.SpotifyStatus
@@ -111,8 +112,19 @@ class BoxControlViewModel(
     fun speak(text: String) = action { repository.speak(box, text) }
 
     fun refreshBluetooth() = action {
-        val response = repository.bluetoothOnDemand(box)
-        _uiState.value = _uiState.value.copy(bluetoothDevices = response.devices)
+        try {
+            val response = repository.bluetoothOnDemand(box)
+            _uiState.value = _uiState.value.copy(bluetoothDevices = response.devices)
+        } catch (e: ApiError) {
+            // Give the two documented Bluetooth failure codes (mupibox-api-current.md) their own
+            // readable message instead of surfacing a raw "HTTP 401"/"HTTP 409" to the user.
+            val message = when (e.code) {
+                401 -> "Anmeldung erforderlich."
+                409 -> "Bluetooth ist deaktiviert."
+                else -> e.message
+            }
+            throw ApiError(e.code, message)
+        }
     }
 
     private fun action(block: suspend (BoxControlUiState) -> Unit) {
