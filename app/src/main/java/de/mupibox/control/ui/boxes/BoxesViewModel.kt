@@ -49,23 +49,39 @@ class BoxesViewModel(private val repository: BoxRepository) : ViewModel() {
     }
 
     fun add(name: String, host: String, port: Int, onAdded: () -> Unit) {
+        save(
+            BoxEndpoint(name = name.trim().ifBlank { "MuPiBox" }, host = host.trim(), port = port),
+            onAdded,
+            "MuPiBox konnte nicht hinzugefügt werden.",
+        )
+    }
+
+    /**
+     * Updates an existing box in place. Preserving [id] is what makes this an update rather than
+     * a duplicate: [BoxRepository.add] validates and health-probes the candidate exactly like a
+     * new box, then [de.mupibox.control.data.local.BoxStore.upsert] replaces the entry with a
+     * matching id instead of appending a new one.
+     */
+    fun update(id: String, name: String, host: String, port: Int, onUpdated: () -> Unit) {
+        save(
+            BoxEndpoint(id = id, name = name.trim().ifBlank { "MuPiBox" }, host = host.trim(), port = port),
+            onUpdated,
+            "MuPiBox konnte nicht aktualisiert werden.",
+        )
+    }
+
+    private fun save(box: BoxEndpoint, onSaved: () -> Unit, failureMessage: String) {
         if (_uiState.value.busy) return
         viewModelScope.launch {
             _uiState.value = BoxesUiState(busy = true)
-            runCatching {
-                repository.add(
-                    BoxEndpoint(
-                        name = name.trim().ifBlank { "MuPiBox" },
-                        host = host.trim(),
-                        port = port,
-                    )
-                )
-            }.onSuccess {
-                _uiState.value = BoxesUiState()
-                onAdded()
-            }.onFailure {
-                _uiState.value = BoxesUiState(error = it.message ?: "MuPiBox konnte nicht hinzugefügt werden.")
-            }
+            runCatching { repository.add(box) }
+                .onSuccess {
+                    _uiState.value = BoxesUiState()
+                    onSaved()
+                }
+                .onFailure {
+                    _uiState.value = BoxesUiState(error = it.message ?: failureMessage)
+                }
         }
     }
 

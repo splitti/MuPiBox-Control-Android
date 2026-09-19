@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Speaker
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.AlertDialog
@@ -21,6 +22,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -45,9 +47,11 @@ fun BoxesScreen(
     onlineStates: Map<String, Boolean> = emptyMap(),
     onOpen: (BoxEndpoint) -> Unit,
     onAdd: (String, String, Int, () -> Unit) -> Unit,
+    onUpdate: (String, String, String, Int, () -> Unit) -> Unit,
     onClearError: () -> Unit,
 ) {
     var addOpen by remember { mutableStateOf(false) }
+    var editingBox by remember { mutableStateOf<BoxEndpoint?>(null) }
 
     fun openAdd() {
         onClearError()
@@ -88,7 +92,7 @@ fun BoxesScreen(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween,
                         ) {
-                            Column {
+                            Column(modifier = Modifier.weight(1f)) {
                                 Text(box.name, style = MaterialTheme.typography.titleMedium)
                                 Text("${box.host}:${box.port}", style = MaterialTheme.typography.bodyMedium)
                                 val online = onlineStates[box.id]
@@ -106,7 +110,12 @@ fun BoxesScreen(
                                     },
                                 )
                             }
-                            Icon(Icons.Default.Speaker, contentDescription = null)
+                            IconButton(onClick = {
+                                onClearError()
+                                editingBox = box
+                            }) {
+                                Icon(Icons.Default.Edit, contentDescription = "Box bearbeiten")
+                            }
                         }
                     }
                 }
@@ -116,15 +125,16 @@ fun BoxesScreen(
     }
 
     if (addOpen) {
-        AddBoxDialog(
+        BoxDialog(
             uiState = uiState,
+            editing = null,
             onDismiss = {
                 if (!uiState.busy) {
                     addOpen = false
                     onClearError()
                 }
             },
-            onAdd = { name, host, port ->
+            onSave = { name, host, port ->
                 onAdd(name, host, port) {
                     addOpen = false
                     onClearError()
@@ -132,21 +142,42 @@ fun BoxesScreen(
             },
         )
     }
+
+    editingBox?.let { box ->
+        BoxDialog(
+            uiState = uiState,
+            editing = box,
+            onDismiss = {
+                if (!uiState.busy) {
+                    editingBox = null
+                    onClearError()
+                }
+            },
+            onSave = { name, host, port ->
+                onUpdate(box.id, name, host, port) {
+                    editingBox = null
+                    onClearError()
+                }
+            },
+        )
+    }
 }
 
+/** Add or edit a saved box: same fields, validation, and health-probe flow either way. */
 @Composable
-private fun AddBoxDialog(
+private fun BoxDialog(
     uiState: BoxesUiState,
+    editing: BoxEndpoint?,
     onDismiss: () -> Unit,
-    onAdd: (String, String, Int) -> Unit,
+    onSave: (String, String, Int) -> Unit,
 ) {
-    var name by remember { mutableStateOf("MuPiBox") }
-    var host by remember { mutableStateOf("") }
-    var port by remember { mutableStateOf("8090") }
+    var name by remember { mutableStateOf(editing?.name ?: "MuPiBox") }
+    var host by remember { mutableStateOf(editing?.host ?: "") }
+    var port by remember { mutableStateOf(editing?.port?.toString() ?: "8090") }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("MuPiBox hinzufügen") },
+        title = { Text(if (editing == null) "MuPiBox hinzufügen" else "MuPiBox bearbeiten") },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 OutlinedTextField(
@@ -183,8 +214,8 @@ private fun AddBoxDialog(
         confirmButton = {
             TextButton(
                 enabled = !uiState.busy && host.isNotBlank() && port.toIntOrNull() in 1..65535,
-                onClick = { onAdd(name, host, port.toInt()) },
-            ) { Text("Hinzufügen") }
+                onClick = { onSave(name, host, port.toInt()) },
+            ) { Text(if (editing == null) "Hinzufügen" else "Speichern") }
         },
         dismissButton = {
             TextButton(enabled = !uiState.busy, onClick = onDismiss) { Text("Abbrechen") }

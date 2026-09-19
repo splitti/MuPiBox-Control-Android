@@ -49,6 +49,7 @@ private fun MuPiBoxControlApp(container: AppContainer) {
             onlineStates = onlineStates,
             onOpen = { selected = it },
             onAdd = boxesVm::add,
+            onUpdate = boxesVm::update,
             onClearError = boxesVm::clearError,
         )
     } else {
