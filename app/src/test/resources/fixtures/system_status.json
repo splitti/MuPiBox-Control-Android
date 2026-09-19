@@ -1,0 +1,5 @@
+{
+  "online": true,
+  "wifi": {"connected":true,"interface":"wlan0","signal_dbm":-51,"quality_percent":72},
+  "battery": {"available":true,"percent":83,"charging":false}
+}

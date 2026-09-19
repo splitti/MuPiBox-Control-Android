@@ -1,0 +1,16 @@
+{
+  "state": "playing",
+  "backend": "mpv",
+  "folder_id": "folder-1",
+  "folder": "Die drei ???",
+  "cover": "/api/cover/folder-1",
+  "queue": [
+    {"id":"track-1","title":"Titel 01","provider":"local","resume_policy":"position"},
+    {"id":"track-2","title":"Titel 02","provider":"local","resume_policy":"position"}
+  ],
+  "index": 1,
+  "position": 12.5,
+  "duration": 240.0,
+  "volume": 25,
+  "max_volume": 50
+}
