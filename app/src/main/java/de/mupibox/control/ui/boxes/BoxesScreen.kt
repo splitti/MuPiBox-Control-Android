@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import de.mupibox.control.model.BoxEndpoint
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BoxesScreen(
     boxes: List<BoxEndpoint>,
