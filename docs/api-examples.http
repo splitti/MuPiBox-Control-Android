@@ -1,0 +1,48 @@
+### Replace with a private LAN endpoint only.
+@box = http://192.168.2.114:8090
+
+### Health
+GET {{box}}/api/health
+
+### Local player
+GET {{box}}/api/status
+
+### System / battery / Wi-Fi quality
+GET {{box}}/api/system
+
+### Spotify
+GET {{box}}/api/spotify/status
+
+### Local pause
+POST {{box}}/api/command
+Content-Type: application/json
+
+{"action":"pause"}
+
+### Local volume - raw server scale, NOT percent
+POST {{box}}/api/command
+Content-Type: application/json
+
+{"action":"volume","value":25}
+
+### Spotify pause
+POST {{box}}/api/spotify/command
+Content-Type: application/json
+
+{"action":"pause"}
+
+### TTS - do not store real private text in committed fixtures
+POST {{box}}/api/speak
+Content-Type: application/json
+
+{"source_type":"android-app","source_ref":"mupibox-control","text":"Testansage"}
+
+### Admin auth state (future config phase)
+GET {{box}}/api/admin/auth
+
+### Connectivity endpoints below may require an authenticated admin session remotely.
+### Do not place real passwords in this committed file.
+GET {{box}}/api/connectivity/wifi/adapters
+
+### Bluetooth performs an expensive scan: run manually only.
+GET {{box}}/api/connectivity/bluetooth
